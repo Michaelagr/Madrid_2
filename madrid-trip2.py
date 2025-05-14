@@ -33,7 +33,7 @@ st.markdown("""
 
 # Initialize session state for the itinerary data
 if 'itinerary' not in st.session_state:
-    default_itinerary = {    
+    default_itinerary = {
         "Tag 1 - Donnerstag – Klassiker & Altstadt": {
             "Frühstück": [
                 {"text": "☕ *Café de la Luz* oder *HanSo Café* (Malasaña, 10 Minuten zu Fuß vom Hotel)", "emoji": "☕"}
@@ -113,14 +113,14 @@ if 'itinerary' not in st.session_state:
                 {"text": "🍄 *El Cisne Azul* – für Pilzliebhaber", "emoji": "🍄"}
             ]
         },
-        "Tag 5 - Montag - Abreise":{
+        "Tag 5 - Montag - Abreise": {
             "Abflug": [
                 {"text": "✈️ 6.20 Uhr Madrid Flughafen", "emoji": "✈️"}
             ]
         }
     }
     st.session_state.itinerary = default_itinerary
-    
+
     # Default trip settings
     st.session_state.trip_settings = {
         "start_date": datetime.now() + timedelta(days=30),
@@ -129,18 +129,18 @@ if 'itinerary' not in st.session_state:
         "trip_name": "Madrid Reiseplan",
         "trip_description": "Für unsere Reise ♥️ – mit viel Zeit für gutes Essen, Entspannung und Genuss."
     }
-    
+
     # Default common timeslots for all days
     st.session_state.default_timeslots = [
         "Frühstück", "Vormittag", "Mittagessen", "Nachmittag", "Abendessen"
     ]
-    
+
     # List of common emojis for activities
     st.session_state.activity_emojis = [
-        "☕", "🍽️", "🏛️", "🖼️", "🌳", "🚶", "🍷", "🍹", "🥘", "🌇", 
+        "☕", "🍽️", "🏛️", "🖼️", "🌳", "🚶", "🍷", "🍹", "🥘", "🌇",
         "📍", "🧭", "🎨", "🍤", "🛍️", "📖", "🔥", "🕌", "🌿", "🍄", "✈️"
     ]
-    
+
     # Weather forecast (simulated data)
     st.session_state.weather = {
         "Tag 1 - Donnerstag – Klassiker & Altstadt": {"icon": "☀️", "temp": "28°C", "desc": "Sonnig"},
@@ -150,14 +150,17 @@ if 'itinerary' not in st.session_state:
         "Tag 5 - Montag - Abreise": {"icon": "☀️", "temp": "27°C", "desc": "Sonnig"}
     }
 
+
 # Functions for itinerary management
 def update_day_name(old_name, new_name):
     """Update a day's name and keep the content"""
     if old_name != new_name and new_name not in st.session_state.itinerary:
         st.session_state.itinerary[new_name] = st.session_state.itinerary.pop(old_name)
-        st.session_state.weather[new_name] = st.session_state.weather.pop(old_name, {"icon": "☀️", "temp": "25°C", "desc": "Sonnig"})
+        st.session_state.weather[new_name] = st.session_state.weather.pop(old_name, {"icon": "☀️", "temp": "25°C",
+                                                                                     "desc": "Sonnig"})
         return True
     return False
+
 
 def add_new_day():
     """Add a new day to the itinerary"""
@@ -170,6 +173,7 @@ def add_new_day():
         return new_day
     return None
 
+
 def delete_day(day_name):
     """Delete a day from the itinerary"""
     if day_name in st.session_state.itinerary:
@@ -179,6 +183,7 @@ def delete_day(day_name):
         return True
     return False
 
+
 def add_section(day, section_name):
     """Add new section to a day"""
     if day in st.session_state.itinerary and section_name:
@@ -187,12 +192,14 @@ def add_section(day, section_name):
             return True
     return False
 
+
 def delete_section(day, section_name):
     """Delete section from a day"""
     if day in st.session_state.itinerary and section_name in st.session_state.itinerary[day]:
         del st.session_state.itinerary[day][section_name]
         return True
     return False
+
 
 def add_activity(day, section, activity_text, emoji="📌"):
     """Add activity to a section"""
@@ -201,34 +208,40 @@ def add_activity(day, section, activity_text, emoji="📌"):
         return True
     return False
 
+
 def delete_activity(day, section, activity_index):
     """Delete activity from a section"""
-    if (day in st.session_state.itinerary and 
-        section in st.session_state.itinerary[day] and 
-        0 <= activity_index < len(st.session_state.itinerary[day][section])):
+    if (day in st.session_state.itinerary and
+            section in st.session_state.itinerary[day] and
+            0 <= activity_index < len(st.session_state.itinerary[day][section])):
         del st.session_state.itinerary[day][section][activity_index]
         return True
     return False
 
+
 def move_activity_up(day, section, activity_index):
     """Move activity up in the list"""
-    if (day in st.session_state.itinerary and 
-        section in st.session_state.itinerary[day] and 
-        0 < activity_index < len(st.session_state.itinerary[day][section])):
+    if (day in st.session_state.itinerary and
+            section in st.session_state.itinerary[day] and
+            0 < activity_index < len(st.session_state.itinerary[day][section])):
         activities = st.session_state.itinerary[day][section]
-        activities[activity_index], activities[activity_index-1] = activities[activity_index-1], activities[activity_index]
+        activities[activity_index], activities[activity_index - 1] = activities[activity_index - 1], activities[
+            activity_index]
         return True
     return False
 
+
 def move_activity_down(day, section, activity_index):
     """Move activity down in the list"""
-    if (day in st.session_state.itinerary and 
-        section in st.session_state.itinerary[day] and 
-        0 <= activity_index < len(st.session_state.itinerary[day][section])-1):
+    if (day in st.session_state.itinerary and
+            section in st.session_state.itinerary[day] and
+            0 <= activity_index < len(st.session_state.itinerary[day][section]) - 1):
         activities = st.session_state.itinerary[day][section]
-        activities[activity_index], activities[activity_index+1] = activities[activity_index+1], activities[activity_index]
+        activities[activity_index], activities[activity_index + 1] = activities[activity_index + 1], activities[
+            activity_index]
         return True
     return False
+
 
 def move_section_up(day, section_name):
     """Move a section up in the day's order"""
@@ -240,12 +253,13 @@ def move_section_up(day, section_name):
             for i, section in enumerate(sections):
                 if i == idx - 1:
                     new_order[section_name] = st.session_state.itinerary[day][section_name]
-                    new_order[sections[idx-1]] = st.session_state.itinerary[day][sections[idx-1]]
+                    new_order[sections[idx - 1]] = st.session_state.itinerary[day][sections[idx - 1]]
                 elif i != idx:
                     new_order[section] = st.session_state.itinerary[day][section]
             st.session_state.itinerary[day] = new_order
             return True
     return False
+
 
 def move_section_down(day, section_name):
     """Move a section down in the day's order"""
@@ -256,13 +270,14 @@ def move_section_down(day, section_name):
             new_order = {}
             for i, section in enumerate(sections):
                 if i == idx + 1:
-                    new_order[sections[idx+1]] = st.session_state.itinerary[day][sections[idx+1]]
+                    new_order[sections[idx + 1]] = st.session_state.itinerary[day][sections[idx + 1]]
                     new_order[section_name] = st.session_state.itinerary[day][section_name]
                 elif i != idx:
                     new_order[section] = st.session_state.itinerary[day][section]
             st.session_state.itinerary[day] = new_order
             return True
     return False
+
 
 def update_weather(day, icon, temp, desc):
     """Update weather information for a day"""
@@ -271,9 +286,11 @@ def update_weather(day, icon, temp, desc):
         return True
     return False
 
+
 def export_itinerary():
     """Export the itinerary as JSON"""
     return json.dumps(st.session_state.itinerary, indent=2, ensure_ascii=False)
+
 
 def import_itinerary(json_data):
     """Import an itinerary from JSON"""
@@ -284,41 +301,44 @@ def import_itinerary(json_data):
     except:
         return False
 
+
 def update_itinerary_name_and_desc(name, desc):
     """Update the itinerary name and description"""
     st.session_state.trip_settings["trip_name"] = name
     st.session_state.trip_settings["trip_description"] = desc
 
+
 def random_emoji():
     """Return a random emoji from the list"""
     return random.choice(st.session_state.activity_emojis)
 
+
 # Sidebar Navigation
 with st.sidebar:
-    st.image("https://cdn.pixabay.com/photo/2018/01/31/05/43/panoramic-3120484_1280.jpg", use_column_width=True)
-    
+    st.image("https://cdn.pixabay.com/photo/2018/01/31/05/43/panoramic-3120484_1280.jpg", use_container_width=True)
+
     # Trip settings expander
     with st.expander("⚙️ Trip-Einstellungen", expanded=False):
         # Trip name and description
         trip_name = st.text_input("Reisename", st.session_state.trip_settings["trip_name"])
         trip_desc = st.text_area("Beschreibung", st.session_state.trip_settings["trip_description"])
-        
+
         if st.button("Aktualisieren", key="update_trip_info"):
             update_itinerary_name_and_desc(trip_name, trip_desc)
             st.success("Trip-Informationen aktualisiert!")
-        
+
         # Date settings
         start_date = st.date_input("Startdatum", st.session_state.trip_settings["start_date"])
         end_date = st.date_input("Enddatum", st.session_state.trip_settings["end_date"])
-        
+
         if start_date and end_date:
             st.session_state.trip_settings["start_date"] = start_date
             st.session_state.trip_settings["end_date"] = end_date
-        
+
         # Hotel information
         hotel = st.text_input("Hotel/Unterkunft", st.session_state.trip_settings["hotel"])
         st.session_state.trip_settings["hotel"] = hotel
-    
+
     # Export/Import functionality
     with st.expander("📤 Export/Import", expanded=False):
         if st.button("Reiseplan exportieren"):
@@ -328,7 +348,7 @@ with st.sidebar:
                 file_name="madrid_trip.json",
                 mime="application/json"
             )
-        
+
         uploaded_file = st.file_uploader("Reiseplan importieren", type="json")
         if uploaded_file is not None:
             json_data = uploaded_file.read().decode("utf-8")
@@ -336,23 +356,23 @@ with st.sidebar:
                 st.success("Reiseplan erfolgreich importiert!")
             else:
                 st.error("Fehler beim Importieren des Reiseplans.")
-    
+
     # Day navigation
     st.markdown("### 📅 Tagesplan wählen")
-    
+
     # Add new day button
     if st.button("+ Neuen Tag hinzufügen", key="add_day_btn"):
         new_day = add_new_day()
         if new_day:
             st.success(f"Tag '{new_day}' hinzugefügt!")
-    
+
     # Day selection with radio buttons
     days = list(st.session_state.itinerary.keys())
     selected_day = st.radio("", days, label_visibility="collapsed")
-    
+
     # Show edit mode toggle
     edit_mode = st.checkbox("✏️ Bearbeitungsmodus", value=False)
-    
+
     st.markdown("---")
     st.info("✨ Auf einen wundervollen Trip! Ich freue mich sehr ♥️")
 
@@ -380,7 +400,7 @@ with day_header_cols[0]:
                 st.rerun()
             else:
                 st.error("Der Name existiert bereits oder ist ungültig.")
-        
+
         if st.button("Tag löschen", key=f"delete_day_{selected_day}"):
             if delete_day(selected_day):
                 st.warning(f"Tag '{selected_day}' gelöscht!")
@@ -390,18 +410,18 @@ with day_header_cols[0]:
 
 with day_header_cols[1]:
     weather = st.session_state.weather.get(selected_day, {"icon": "☀️", "temp": "25°C", "desc": "Sonnig"})
-    
+
     if edit_mode:
         # Weather editing
         weather_cols = st.columns(3)
         with weather_cols[0]:
-            icon = st.selectbox("Icon", ["☀️", "⛅", "🌦️", "🌧️", "⛈️", "❄️"], 
-                               index=["☀️", "⛅", "🌦️", "🌧️", "⛈️", "❄️"].index(weather["icon"]))
+            icon = st.selectbox("Icon", ["☀️", "⛅", "🌦️", "🌧️", "⛈️", "❄️"],
+                                index=["☀️", "⛅", "🌦️", "🌧️", "⛈️", "❄️"].index(weather["icon"]))
         with weather_cols[1]:
             temp = st.text_input("Temp", weather["temp"])
         with weather_cols[2]:
             desc = st.text_input("Desc", weather["desc"])
-        
+
         if st.button("Wetter aktualisieren"):
             update_weather(selected_day, icon, temp, desc)
             st.success("Wetter aktualisiert!")
@@ -452,7 +472,7 @@ for section, items in day_plan.items():
                     if delete_section(selected_day, section):
                         st.success(f"Abschnitt '{section}' gelöscht!")
                         st.rerun()
-        
+
         # Section rename form (only shown when rename button is clicked)
         if edit_mode and st.session_state.get(f"rename_section_{section}", False):
             rename_col1, rename_col2 = st.columns([3, 1])
@@ -461,17 +481,18 @@ for section, items in day_plan.items():
             with rename_col2:
                 if st.button("Speichern", key=f"save_name_{section}"):
                     if add_section(selected_day, new_section_name):
-                        st.session_state.itinerary[selected_day][new_section_name] = st.session_state.itinerary[selected_day].pop(section)
+                        st.session_state.itinerary[selected_day][new_section_name] = st.session_state.itinerary[
+                            selected_day].pop(section)
                         st.session_state[f"rename_section_{section}"] = False
                         st.success(f"Abschnitt umbenannt zu '{new_section_name}'!")
                         st.rerun()
                     else:
                         st.error("Der Name existiert bereits oder ist ungültig.")
-        
+
         # Display items in the section
         for i, item in enumerate(items):
             item_text = item["text"]
-            
+
             if edit_mode:
                 cols = st.columns([3, 1, 1, 1, 1])
                 with cols[0]:
@@ -494,14 +515,15 @@ for section, items in day_plan.items():
                             st.rerun()
             else:
                 st.markdown(f"- {item_text}")
-            
+
             # Activity edit form
             if edit_mode and st.session_state.get(f"edit_activity_{section}_{i}", False):
                 edit_cols = st.columns([1, 3, 1])
                 with edit_cols[0]:
-                    emoji = st.selectbox("Emoji", st.session_state.activity_emojis, 
-                                       index=st.session_state.activity_emojis.index(item["emoji"]) if item["emoji"] in st.session_state.activity_emojis else 0,
-                                       key=f"emoji_{section}_{i}")
+                    emoji = st.selectbox("Emoji", st.session_state.activity_emojis,
+                                         index=st.session_state.activity_emojis.index(item["emoji"]) if item[
+                                                                                                            "emoji"] in st.session_state.activity_emojis else 0,
+                                         key=f"emoji_{section}_{i}")
                 with edit_cols[1]:
                     # Extract text without emoji
                     text = item_text
@@ -510,11 +532,12 @@ for section, items in day_plan.items():
                     activity_text = st.text_input("Aktivität", text, key=f"text_{section}_{i}")
                 with edit_cols[2]:
                     if st.button("Speichern", key=f"save_{section}_{i}"):
-                        st.session_state.itinerary[selected_day][section][i] = {"text": f"{emoji} {activity_text}", "emoji": emoji}
+                        st.session_state.itinerary[selected_day][section][i] = {"text": f"{emoji} {activity_text}",
+                                                                                "emoji": emoji}
                         st.session_state[f"edit_activity_{section}_{i}"] = False
                         st.success("Aktivität aktualisiert!")
                         st.rerun()
-        
+
         # Add activity form (only in edit mode)
         if edit_mode:
             st.markdown("---")
@@ -534,4 +557,4 @@ for section, items in day_plan.items():
 # Add map at the bottom
 st.markdown("---")
 st.subheader("📍 Karte")
-st.markdown("Hier sind alle Orte auf der Karte
+st.markdown("Hier sind alle Orte auf der Karte")
